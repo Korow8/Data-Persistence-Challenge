@@ -23,16 +23,30 @@ public class UIMenuHandler : MonoBehaviour
 
     public void OnClickStart()
     {
-        Datas.name = nameField.text;
-        SceneManager.LoadScene(1);
+        //Datas.name = nameField.text;
+        //SceneManager.LoadScene(1);
+        Highscore.Instance.LoadDatas();
+
+        if(Highscore.Instance._highScoreDatas != null)
+        {
+            foreach (KeyValuePair<string, int> data in Highscore.Instance._highScoreDatas)
+            {
+                Debug.Log(data.Key + " : " + data.Value);
+            }
+        }
     }
 
     public void OnClickExit()
-    {
+    {/*
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.ExitPlaymode();
 #else
     Application.Quit();
-#endif
+#endif*/
+        //Datas.name = nameField.text;
+        Highscore.Instance.AddHighScoreData("test", -1);
+        Highscore.Instance.AddHighScoreData("test2", -12);
+        Highscore.Instance.AddHighScoreData("test3", -123);
+        Highscore.Instance.SaveDatas();
     }
 }
