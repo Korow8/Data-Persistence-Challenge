@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
+using System.Linq;
 
 public class Highscore
 {
@@ -45,7 +47,7 @@ public class Highscore
     [Serializable] public class HighScoreDatas : SerializableDictionary<string, int> { };
     public HighScoreDatas _highScoreDatas;
 
-
+    // Singleton object
     private static Highscore _instance;
     public static Highscore Instance
     {
@@ -68,11 +70,8 @@ public class Highscore
         if (_highScoreDatas != null)
         {
             string json = JsonUtility.ToJson(_highScoreDatas);
-            Debug.Log(json);
             File.WriteAllText(path, json);
-            Debug.Log("Saved");
         }
-        
     }
 
     public void LoadDatas()
@@ -82,32 +81,46 @@ public class Highscore
             string json = File.ReadAllText(path);
             HighScoreDatas data = JsonUtility.FromJson<HighScoreDatas>(json);
             _highScoreDatas = data;
-            Debug.Log("Loaded");
         }
-        
+
+        if (_highScoreDatas == null)
+        {
+            _highScoreDatas = new HighScoreDatas();
+        }
     }
 
     public void AddHighScoreData(string name, int value)
     {
-        if(_highScoreDatas == null)
-         {
-             _highScoreDatas = new HighScoreDatas();
-             Debug.Log("new highscoredata");
-         }
+        // Load the data from file
+        if (_highScoreDatas == null)
+        {
+            LoadDatas();
+        }
 
-         if (_highScoreDatas.ContainsKey(name))
-         {
-             if(_highScoreDatas[name] < value)
-             {
-                 _highScoreDatas[name] = value;
-             }
-             Debug.Log("Modify in dictionnary");
-         }
-         else
-         {
-             _highScoreDatas.Add(name, value);
-             Debug.Log("Added in dictionnary");
-         }
-         Debug.Log("Added Score");
+        // Check if duplicate
+        if (_highScoreDatas.ContainsKey(name))
+        {
+            if(_highScoreDatas[name] < value)
+            {
+                _highScoreDatas[name] = value;
+            }
+        }
+        else
+        {
+            _highScoreDatas.Add(name, value);
+        }
+
+        // Rewrite the highscore file
+        SaveDatas();
+    }
+
+    public string GetBestScore()
+    {
+        LoadDatas();
+
+        // Sort the dictionnary by descending, then get the first key who is the max value
+        string name = _highScoreDatas.OrderByDescending(x => x.Value).First().Key;
+
+        return name + " : " + _highScoreDatas[name];
     }
 }
