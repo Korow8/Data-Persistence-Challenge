@@ -20,10 +20,14 @@ public static class Datas
 
 public class UIMenuHandler : MonoBehaviour
 {
+    [SerializeField] private GameObject menuPanel;
     [SerializeField] private TMPro.TMP_InputField nameField;
     [SerializeField] private Text bestScoreText;
-    [SerializeField] private GameObject menuPanel;
+    
+    
     [SerializeField] private GameObject highScorePanel;
+    [SerializeField] private TMPro.TextMeshProUGUI highScoreText;
+
 
     private void Awake()
     {
@@ -38,13 +42,7 @@ public class UIMenuHandler : MonoBehaviour
 
     public void OnClickHighscore()
     {
-        /*if(Highscore.Instance._highScoreDatas != null)
-        {
-            foreach (KeyValuePair<string, int> data in Highscore.Instance._highScoreDatas)
-            {
-                Debug.Log(data.Key + " : " + data.Value);
-            }
-        }*/
+        highScoreText.text = Highscore.Instance.GetAllScore();
         menuPanel.SetActive(false);
         highScorePanel.SetActive(true); 
     }

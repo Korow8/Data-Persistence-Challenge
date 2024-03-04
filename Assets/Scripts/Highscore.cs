@@ -123,4 +123,23 @@ public class Highscore
 
         return name + " : " + _highScoreDatas[name];
     }
+
+    public string GetAllScore()
+    {
+        string scores = "-1";
+        if(_highScoreDatas != null)
+        {
+            scores = "";
+            foreach (KeyValuePair<string, int> data in Highscore.Instance._highScoreDatas)
+            {
+                scores += data.Key + " : " + data.Value + "<br>";
+            }
+        }
+        else
+        {
+            Debug.Log("Warning : Attempting to GetAllScore from null dictionnary");
+        }
+
+        return scores;
+    }
 }
