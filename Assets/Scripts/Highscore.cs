@@ -100,6 +100,7 @@ public class Highscore
         // Check if duplicate
         if (_highScoreDatas.ContainsKey(name))
         {
+            // If duplicate, update the value if the current value is greater than the one savec
             if(_highScoreDatas[name] < value)
             {
                 _highScoreDatas[name] = value;
@@ -130,7 +131,7 @@ public class Highscore
         if(_highScoreDatas != null)
         {
             scores = "";
-            foreach (KeyValuePair<string, int> data in Highscore.Instance._highScoreDatas)
+            foreach (KeyValuePair<string, int> data in Highscore.Instance._highScoreDatas.OrderByDescending(key => key.Value))
             {
                 scores += data.Key + " : " + data.Value + "<br>";
             }
